@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   Plus,
@@ -11,6 +11,7 @@ import {
   Check,
   Info,
   ChevronDown,
+  Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -47,6 +48,7 @@ export function Calculator({
   variant?: "default" | "hero";
 }) {
   const hero = variant === "hero";
+  const instanceId = useId();
   const [input, setInput] = useState<ProjectInput>(
     initialProject ?? cloneDefault,
   );
@@ -67,7 +69,9 @@ export function Calculator({
     stored: boolean;
   } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [assumptionsOpen, setAssumptionsOpen] = useState(!hero);
   const resultsRef = useRef<HTMLElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const stale =
     !!snapshot && JSON.stringify(snapshot.input) !== JSON.stringify(input);
   const imperial = input.units === "imperial";
@@ -119,10 +123,12 @@ export function Calculator({
       const result = calculateProject(input);
       setSnapshot({ input: structuredClone(input), result });
       setError("");
-      setNotice("Estimate updated. Review the assumptions before ordering.");
+      setNotice(
+        `Estimate updated: ${formatNumber(result.totalWeight)} ${weightUnit}.`,
+      );
       requestAnimationFrame(() => {
-        resultsRef.current?.focus({ preventScroll: true });
-        if (window.matchMedia("(max-width: 760px)").matches)
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          resultsRef.current?.focus({ preventScroll: true });
           resultsRef.current?.scrollIntoView({
             behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
               .matches
@@ -130,15 +136,27 @@ export function Calculator({
               : "smooth",
             block: "start",
           });
+        }
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Check your measurements.");
+      const message =
+        e instanceof Error ? e.message : "Check your measurements.";
+      setError(message);
+      if (/density|allowance|price/i.test(message)) setAssumptionsOpen(true);
       setSnapshot(null);
+      requestAnimationFrame(() => errorRef.current?.focus());
     }
   }
   function changeUnits(value: string) {
     try {
       update(convertProjectUnits(input, value as ProjectInput["units"]));
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+  function changeOutputUnit(value: string) {
+    try {
+      update(convertOutputUnit(input, value as ProjectInput["outputUnit"]));
     } catch (e) {
       setError((e as Error).message);
     }
@@ -254,10 +272,15 @@ export function Calculator({
     value: number,
     unit: string,
     onChange: (value: number) => void,
-    options?: { zero?: boolean; focus?: string; id?: string },
+    options?: {
+      zero?: boolean;
+      focus?: string;
+      id?: string;
+      displayLabel?: string;
+    },
   ) => (
     <label className="field-label">
-      {label}
+      {options?.displayLabel ?? label}
       <span className="number-field">
         <input
           type="number"
@@ -284,7 +307,7 @@ export function Calculator({
       area.thickness,
       imperial ? "in" : "mm",
       (v) => updateArea(area.id, { thickness: v }),
-      { focus: "thickness" },
+      { focus: "thickness", displayLabel: hero ? "Thickness" : undefined },
     );
 
   return (
@@ -292,11 +315,16 @@ export function Calculator({
       className={`workbench${hero ? " hero-workbench" : ""}${readOnly ? " shared-workbench" : ""}`}
     >
       {!readOnly && (
-        <form className="calculator-inputs" onSubmit={calculate} noValidate>
+        <form
+          className="calculator-inputs"
+          aria-labelledby={`${instanceId}-measurements`}
+          onSubmit={calculate}
+          noValidate
+        >
           <div className="panel-heading">
-            <span className="eyebrow">
-              {hero ? "Project measurements" : "01 / YOUR MEASUREMENTS"}
-            </span>
+            <h2 className="panel-title" id={`${instanceId}-measurements`}>
+              Project measurements
+            </h2>
             <Button variant="ghost" size="sm" type="button" onClick={reset}>
               <RotateCcw size={13} />
               Reset
@@ -326,9 +354,16 @@ export function Calculator({
                   aria-label={`Area ${index + 1} name`}
                   value={area.name}
                   maxLength={80}
+                  title="Edit area name"
+                  id={`${instanceId}-${area.id}-name`}
                   onChange={(e) =>
                     updateArea(area.id, { name: e.target.value })
                   }
+                />
+                <Pencil
+                  className="area-edit-icon"
+                  size={13}
+                  aria-hidden="true"
                 />
                 {input.areas.length > 1 && (
                   <Button
@@ -395,6 +430,9 @@ export function Calculator({
               {!hero && thicknessField(area)}
             </fieldset>
           ))}
+          <p className="measurement-help">
+            Use the finished thickness after compaction.
+          </p>
           <Button
             className="add-area"
             type="button"
@@ -404,20 +442,29 @@ export function Calculator({
               const area = createArea(input.areas.length + 1);
               if (!imperial) area.thickness = 75;
               update({ ...input, areas: [...input.areas, area] });
+              requestAnimationFrame(() =>
+                document
+                  .getElementById(`${instanceId}-${area.id}-name`)
+                  ?.focus(),
+              );
             }}
           >
             <Plus size={16} />
             Add another area{" "}
             <span className="muted">{input.areas.length}/20</span>
           </Button>
-          <details className="assumptions-disclosure" open={!hero}>
+          <details
+            className="assumptions-disclosure"
+            open={assumptionsOpen}
+            onToggle={(event) => setAssumptionsOpen(event.currentTarget.open)}
+          >
             <summary>
               <span>Density, allowance &amp; price</span>
               <ChevronDown size={15} aria-hidden="true" />
             </summary>
             <div className="assumptions-block">
               <div className="panel-heading">
-                <span className="eyebrow">02 / MATERIAL ASSUMPTIONS</span>
+                <h3 className="group-title">Material assumptions</h3>
                 <a
                   href="/guides/asphalt-density"
                   aria-label="Read about asphalt density"
@@ -441,30 +488,9 @@ export function Calculator({
                 )}
               </div>
               <p className="field-help">
-                145 lb/ft³ is a starting estimate. Use your supplier's mix
-                density. Allowance is optional and added once.
+                Use your supplier's mix density. The default is a planning
+                estimate. Allowance is optional and added once.
               </p>
-              <label className="field-label">
-                Result weight unit
-                <select
-                  value={input.outputUnit}
-                  onChange={(e) => {
-                    try {
-                      update(
-                        convertOutputUnit(
-                          input,
-                          e.target.value as ProjectInput["outputUnit"],
-                        ),
-                      );
-                    } catch (e) {
-                      setError((e as Error).message);
-                    }
-                  }}
-                >
-                  <option value="us-ton">US short tons (2,000 lb)</option>
-                  <option value="metric-tonne">Metric tonnes (1,000 kg)</option>
-                </select>
-              </label>
               <label className="field-label price-field">
                 Material price <span className="optional-label">optional</span>
                 <span className="number-field">
@@ -504,12 +530,13 @@ export function Calculator({
             </p>
           )}
           {error && (
-            <p role="alert" className="form-error">
+            <p role="alert" className="form-error" tabIndex={-1} ref={errorRef}>
               {error}
             </p>
           )}
           <Button type="submit" className="calculate-button">
-            Calculate material <ArrowRight size={18} />
+            {stale ? "Update estimate" : "Calculate material"}{" "}
+            <ArrowRight size={18} />
           </Button>
           <p className="input-footnote">
             No account. Your valid draft stays in this browser.
@@ -519,27 +546,35 @@ export function Calculator({
       <section
         className="estimate-panel"
         tabIndex={-1}
-        aria-label="Material estimate"
+        aria-labelledby={`${instanceId}-estimate`}
         ref={resultsRef}
       >
         <div className="estimate-panel-top">
-          <span className="eyebrow">
-            {readOnly
-              ? "SHARED PROJECT"
-              : hero
-                ? "Material estimate"
-                : "03 / YOUR ESTIMATE"}
-          </span>
+          <h2 className="panel-title" id={`${instanceId}-estimate`}>
+            {readOnly ? "Shared material estimate" : "Material estimate"}
+          </h2>
           <span
             className={`result-status${snapshot && !stale ? " status-ready" : ""}`}
           >
             {stale
-              ? "RECALCULATE"
+              ? "Needs update"
               : snapshot
-                ? "CALCULATED"
-                : "READY WHEN YOU ARE"}
+                ? "Calculated"
+                : "Ready to calculate"}
           </span>
         </div>
+        {!readOnly && (
+          <label className="result-unit-control">
+            Result unit
+            <select
+              value={input.outputUnit}
+              onChange={(event) => changeOutputUnit(event.target.value)}
+            >
+              <option value="us-ton">US short tons</option>
+              <option value="metric-tonne">Metric tonnes</option>
+            </select>
+          </label>
+        )}
         {!hero && <RoadDiagram active={active} compact />}
         {snapshot ? (
           <>
@@ -549,7 +584,7 @@ export function Calculator({
               </p>
             )}
             <div className={`estimate-values${stale ? " is-stale" : ""}`}>
-              <p className="result-label">PLANNED MATERIAL TOTAL</p>
+              <p className="result-label">Planned material total</p>
               <div className="result-number">
                 {formatNumber(snapshot.result.totalWeight)}
                 <span>
@@ -563,6 +598,7 @@ export function Calculator({
                   ? "1 US short ton = 2,000 lb"
                   : "1 metric tonne = 1,000 kg"}
               </p>
+              <h3 className="breakdown-heading">Estimate breakdown</h3>
               <dl className="result-breakdown">
                 <div>
                   <dt>Net material</dt>
@@ -623,12 +659,12 @@ export function Calculator({
               </dl>
               {snapshot.result.areas.length > 1 && (
                 <div className="per-area-results">
-                  <p className="result-label">
-                    AREA BREAKDOWN /{" "}
+                  <h3 className="group-title">
+                    By area /{" "}
                     {snapshot.input.outputUnit === "us-ton"
                       ? "US TONS"
                       : "TONNES"}
-                  </p>
+                  </h3>
                   {snapshot.result.areas.map((a) => (
                     <div key={a.id}>
                       <span>{a.name}</span>
@@ -674,24 +710,20 @@ export function Calculator({
           </>
         ) : (
           <div className="empty-result">
-            <p className="result-label">
-              {hero
-                ? "PLANNED MATERIAL TOTAL"
-                : "A SOLID PLAN STARTS WITH THE NUMBERS."}
-            </p>
+            <p className="result-label">Planned material total</p>
             {hero ? (
               <>
                 <div className="result-placeholder" aria-hidden="true">
                   -- <span>{weightUnit}</span>
                 </div>
-                <h2>Your material estimate</h2>
+                <h3>Ready when you are</h3>
               </>
             ) : (
-              <h2>
+              <h3>
                 Your project.
                 <br />
                 Measured clearly.
-              </h2>
+              </h3>
             )}
             <p>
               {hero

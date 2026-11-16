@@ -52,6 +52,15 @@ function HomePage() {
         </div>
       </section>
       <div className="content-width home-reference">
+        <nav
+          className="section-jump-links"
+          aria-label="Calculator reference sections"
+        >
+          <a href="#how-it-works">How it works</a>
+          <a href="#coverage">Coverage per ton</a>
+          <a href="#faq">FAQs</a>
+          <a href="#guides-heading">Guides</a>
+        </nav>
         <CalculatorExplainer />
         <section className="field-guides" aria-labelledby="guides-heading">
           <div className="section-heading">

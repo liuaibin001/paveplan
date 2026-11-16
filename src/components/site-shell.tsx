@@ -26,17 +26,17 @@ export function SiteHeader() {
             Calculator
           </a>
           <a href="/guides/measure-driveway" onClick={() => setOpen(false)}>
-            Field notes
+            Guides
           </a>
           <a href="/methodology" onClick={() => setOpen(false)}>
-            Our method
+            Methodology
           </a>
           <a
             className="nav-action"
             href="/#calculator"
             onClick={() => setOpen(false)}
           >
-            Plan your project <ArrowUpRight size={15} />
+            Start calculating <ArrowUpRight size={15} />
           </a>
         </nav>
       </div>
@@ -56,26 +56,32 @@ export function SiteFooter() {
             Build a clearer material plan.
           </p>
         </div>
-        <div>
-          <h2>THE WORKBENCH</h2>
+        <nav className="footer-group" aria-labelledby="footer-tools">
+          <p className="footer-label" id="footer-tools">
+            The workbench
+          </p>
           <a href="/#calculator">Asphalt calculator</a>
           <a href="/guides/asphalt-coverage">Coverage per ton</a>
           <a href="/guides/asphalt-density">Density &amp; units</a>
-        </div>
-        <div>
-          <h2>FIELD NOTES</h2>
+        </nav>
+        <nav className="footer-group" aria-labelledby="footer-guides">
+          <p className="footer-label" id="footer-guides">
+            Guides
+          </p>
           <a href="/guides/measure-driveway">Measure your project</a>
           <a href="/guides/asphalt-material-vs-installed-cost">
             Understand the cost
           </a>
           <a href="/methodology">Method &amp; assumptions</a>
-        </div>
-        <div>
-          <h2>BEHIND THE NUMBERS</h2>
+        </nav>
+        <nav className="footer-group" aria-labelledby="footer-about">
+          <p className="footer-label" id="footer-about">
+            Behind the numbers
+          </p>
           <a href="/about">About PavePlan</a>
           <a href="/editorial-policy">Sources &amp; corrections</a>
           <a href="/contact">Report an issue</a>
-        </div>
+        </nav>
       </div>
       <div className="footer-bottom content-width">
         <span>

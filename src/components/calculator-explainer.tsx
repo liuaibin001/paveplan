@@ -4,30 +4,41 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Link2 } from "lucide-react";
 import { SITE_URL, structuredData } from "@/lib/site";
 
 export function CalculatorExplainer() {
   return (
     <div className="calculator-explainer">
-      <section className="tool-explainer" aria-labelledby="formula-heading">
-        <div>
-          <p className="eyebrow">BEHIND THE ESTIMATE</p>
-          <h2 id="formula-heading">How many tons of asphalt do I need?</h2>
+      <div className="tool-explainer">
+        <section id="how-it-works" aria-labelledby="formula-heading">
+          <h2 id="formula-heading">
+            <a className="heading-anchor" href="#how-it-works">
+              How many tons of asphalt do I need?
+              <Link2 size={16} aria-hidden="true" />
+            </a>
+          </h2>
           <p>
             Multiply your surface area by the compacted thickness to get volume.
             Multiply that volume by the mix density to get mass, then convert to
             the ton unit you need.
           </p>
+          <h3 className="explainer-subheading">Asphalt quantity formula</h3>
           <div className="formula-box">
-            <code>
-              US short tons = area (ft²) × thickness (in) ÷ 12 × density
-              (lb/ft³) ÷ 2,000
-            </code>
-            <code>
-              Metric tonnes = area (m²) × thickness (mm) ÷ 1,000 × density
-              (kg/m³) ÷ 1,000
-            </code>
+            <div className="formula-row">
+              <p className="formula-label">US short tons</p>
+              <code>
+                area (ft²) × thickness (in) ÷ 12 × density (lb/ft³) ÷ 2,000
+              </code>
+            </div>
+            <div className="formula-row">
+              <p className="formula-label">Metric tonnes</p>
+              <code>
+                area (m²) × thickness (mm) ÷ 1,000 × density (kg/m³) ÷ 1,000
+              </code>
+            </div>
           </div>
+          <h3 className="explainer-subheading">Worked example</h3>
           <p>
             For example, 100 ft × 20 ft at 3 in and an assumed 145 lb/ft³ needs{" "}
             <strong>36.25 US short tons before allowance</strong>. Add 5% extra
@@ -38,10 +49,14 @@ export function CalculatorExplainer() {
             Ask your supplier for the density of your particular mix.{" "}
             <a href="/methodology">Read the full method and reference cases.</a>
           </p>
-        </div>
-        <div>
-          <p className="eyebrow">QUICK REFERENCE</p>
-          <h2>Coverage per US ton.</h2>
+        </section>
+        <section id="coverage" aria-labelledby="coverage-heading">
+          <h2 id="coverage-heading">
+            <a className="heading-anchor" href="#coverage">
+              Asphalt coverage per US ton
+              <Link2 size={16} aria-hidden="true" />
+            </a>
+          </h2>
           <table className="example-table">
             <caption className="sr-only">
               Coverage of one US short ton of asphalt at an assumed density of
@@ -76,11 +91,15 @@ export function CalculatorExplainer() {
             specification.{" "}
             <a href="/guides/asphalt-coverage">Explore coverage examples.</a>
           </p>
-        </div>
-      </section>
-      <section className="faq-section" aria-labelledby="faq-heading">
-        <p className="eyebrow">BEFORE YOU ORDER</p>
-        <h2 id="faq-heading">A few useful answers.</h2>
+        </section>
+      </div>
+      <section className="faq-section" id="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">
+          <a className="heading-anchor" href="#faq">
+            Asphalt calculator FAQs
+            <Link2 size={16} aria-hidden="true" />
+          </a>
+        </h2>
         <Accordion>
           <AccordionItem value="tons">
             <AccordionTrigger>
