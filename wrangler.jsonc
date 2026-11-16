@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "paveplan",
+  "main": "src/server.ts",
+  "compatibility_date": "2026-11-16",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "observability": { "enabled": true, "head_sampling_rate": 0.1 },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "paveplan-db",
+      "database_id": "04d0005c-0147-4f08-af5a-65face8f22fb",
+      "migrations_dir": "drizzle",
+    },
+  ],
+  "ratelimits": [
+    {
+      "name": "SHARE_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 },
+    },
+  ],
+  "triggers": { "crons": ["17 3 * * *"] },
+}
