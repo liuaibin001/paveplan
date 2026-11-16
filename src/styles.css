@@ -1970,3 +1970,14 @@ section[id] {
     break-inside: avoid;
   }
 }
+
+.share-delete-button {
+  margin-top: 14px;
+  font-size: 11px;
+  min-height: 34px;
+  padding: 7px 12px;
+  border-color: #7d8b6d;
+}
+.share-delete-button:hover {
+  background: #4c5942;
+}

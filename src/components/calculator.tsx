@@ -59,6 +59,8 @@ export function Calculator({
     url: string;
     id: string;
     expiresAt: number | string;
+    deleteToken: string;
+    stored: boolean;
   } | null>(null);
   const [busy, setBusy] = useState(false);
   const resultsRef = useRef<HTMLElement>(null);
@@ -98,7 +100,7 @@ export function Calculator({
   function update(next: ProjectInput) {
     setInput(next);
     setError("");
-    setShare(null);
+    setShare((previous) => (previous && !previous.stored ? previous : null));
     setNotice("");
   }
   function updateArea(id: string, patch: Partial<AreaInput>) {
@@ -170,6 +172,15 @@ export function Calculator({
     if (!snapshot || stale) return;
     setBusy(true);
     try {
+      try {
+        const probeKey = `paveplan:delete:${crypto.randomUUID()}`;
+        localStorage.setItem(probeKey, "0".repeat(64));
+        localStorage.removeItem(probeKey);
+      } catch {
+        throw new Error(
+          "Enable browser storage before sharing so your deletion key can be saved. Copy or download the estimate instead.",
+        );
+      }
       const response = await fetch("/api/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -178,24 +189,53 @@ export function Calculator({
       const body = (await response.json()) as {
         id?: string;
         deleteToken?: string;
-        expiresAt?: number;
+        expiresAt?: string;
         error?: string;
       };
       if (!response.ok || !body.id || !body.deleteToken)
         throw new Error(
           body.error ?? "Could not create a share link. Please try again.",
         );
+      let stored = false;
       try {
         localStorage.setItem(`paveplan:delete:${body.id}`, body.deleteToken);
+        stored =
+          localStorage.getItem(`paveplan:delete:${body.id}`) ===
+          body.deleteToken;
       } catch {}
       setShare({
         url: `${window.location.origin}/project/${body.id}`,
         id: body.id,
         expiresAt: body.expiresAt ?? "",
+        deleteToken: body.deleteToken,
+        stored,
       });
       setNotice(
         "Public link created. Anyone with this link can read your estimate for 30 days.",
       );
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function deleteCurrentShare() {
+    if (!share) return;
+    setBusy(true);
+    try {
+      const response = await fetch(`/api/projects/${share.id}`, {
+        method: "DELETE",
+        headers: { "X-Delete-Token": share.deleteToken },
+      });
+      if (!response.ok && response.status !== 404)
+        throw new Error(
+          "Could not delete this link. Keep this page open and try again.",
+        );
+      try {
+        localStorage.removeItem(`paveplan:delete:${share.id}`);
+      } catch {}
+      setShare(null);
+      setNotice("The public share link has been deleted.");
     } catch (e) {
       setNotice((e as Error).message);
     } finally {
@@ -580,7 +620,7 @@ export function Calculator({
               </Button>
               {!readOnly && (
                 <Button
-                  disabled={stale || busy}
+                  disabled={stale || busy || (!!share && !share.stored)}
                   variant="outline"
                   onClick={createShare}
                 >
@@ -589,26 +629,6 @@ export function Calculator({
                 </Button>
               )}
             </div>
-            {share && (
-              <div className="share-box">
-                <label htmlFor="share-url">
-                  Public estimate link · expires in 30 days
-                </label>
-                <input
-                  id="share-url"
-                  value={share.url}
-                  readOnly
-                  onFocus={(e) => e.target.select()}
-                />
-                <a href={share.url}>
-                  Open shared estimate <ArrowRight size={13} />
-                </a>
-                <p>
-                  Open this link in this browser to delete it. Keep private
-                  details out of area names.
-                </p>
-              </div>
-            )}
             <details className="estimate-details">
               <summary>Measurements &amp; assumptions</summary>
               <pre>{summary()}</pre>
@@ -636,6 +656,38 @@ export function Calculator({
             </div>
           </div>
         )}
+        {share && (
+          <div className="share-box">
+            <label htmlFor="share-url">
+              Public estimate link · expires in 30 days
+            </label>
+            <input
+              id="share-url"
+              value={share.url}
+              readOnly
+              onFocus={(e) => e.target.select()}
+            />
+            {share.stored && (
+              <a href={share.url}>
+                Open shared estimate <ArrowRight size={13} />
+              </a>
+            )}
+            <p>
+              {share.stored
+                ? "Open this link in this browser to delete it. Keep private details out of area names."
+                : "Your deletion key could not be saved. Keep this page open and use Delete link before leaving. This link remains public until deleted or expired."}
+            </p>
+            <Button
+              className="share-delete-button"
+              variant="outline"
+              onClick={deleteCurrentShare}
+              disabled={busy}
+            >
+              Delete link
+            </Button>
+          </div>
+        )}
+
         <div className="estimate-disclaimer">
           <Check size={15} />
           <p>
