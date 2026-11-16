@@ -14,7 +14,7 @@ export function ContentPageView({ page }: { page: ContentPage }) {
             ))}
           </ol>
         </nav>
-        <a className="article-tool-link" href="/asphalt-calculator">
+        <a className="article-tool-link" href="/#calculator">
           Open the calculator <span aria-hidden="true">&rarr;</span>
         </a>
       </aside>

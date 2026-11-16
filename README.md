@@ -5,7 +5,7 @@ compacted thickness, ton definitions, and extra allowance explicit before users
 copy or share an estimate.
 
 - Production: <https://paveplan.otoo.workers.dev>
-- Private repository: <https://github.com/liuaibin001/paveplan>
+- Repository: <https://github.com/liuaibin001/paveplan>
 
 ## Stack
 
@@ -17,6 +17,12 @@ copy or share an estimate.
 
 The calculation kernel lives in `src/lib/calculator.ts`. It is shared by the
 interface and server validation; the server does not trust client totals.
+
+The homepage is the canonical asphalt calculator. Its Hero contains the live
+measurement form and result panel; density, allowance, output units, and price
+are available in the expandable assumptions section. `/asphalt-calculator`
+permanently redirects to `/`. Formula explanations, reference tables, and FAQs
+are server-rendered below the tool.
 
 ## Local development
 

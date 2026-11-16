@@ -121,9 +121,7 @@ export const pages: Record<string, ContentPage> = {
         paragraphs: [
           "Use the calculator for a specific length, width or total area. Keep the compacted thickness and density visible when you copy the result. For several non-overlapping areas, calculate each section with its own thickness and then add the material quantities.",
         ],
-        links: [
-          { label: "Open the asphalt calculator", href: "/asphalt-calculator" },
-        ],
+        links: [{ label: "Open the asphalt calculator", href: "/#calculator" }],
       },
     ],
     related: [
@@ -239,7 +237,7 @@ export const pages: Record<string, ContentPage> = {
     ],
     related: [
       {
-        href: "/asphalt-calculator",
+        href: "/#calculator",
         label: "Use your material's density in the calculator",
       },
       {
@@ -369,7 +367,7 @@ export const pages: Record<string, ContentPage> = {
         links: [
           {
             label: "Calculate your separate areas",
-            href: "/asphalt-calculator",
+            href: "/#calculator",
           },
         ],
       },
@@ -388,7 +386,7 @@ export const pages: Record<string, ContentPage> = {
     ],
     related: [
       {
-        href: "/asphalt-calculator",
+        href: "/#calculator",
         label: "Turn measurements into a material estimate",
       },
       {
@@ -522,14 +520,14 @@ export const pages: Record<string, ContentPage> = {
         links: [
           {
             label: "Build a material summary in the calculator",
-            href: "/asphalt-calculator",
+            href: "/#calculator",
           },
         ],
       },
     ],
     related: [
       {
-        href: "/asphalt-calculator",
+        href: "/#calculator",
         label: "Calculate with your supplied material price",
       },
       {
@@ -696,7 +694,7 @@ export const pages: Record<string, ContentPage> = {
       },
     ],
     related: [
-      { href: "/asphalt-calculator", label: "Use the asphalt calculator" },
+      { href: "/#calculator", label: "Use the asphalt calculator" },
       {
         href: "/guides/asphalt-density",
         label: "Check the material density assumption",

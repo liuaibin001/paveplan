@@ -22,7 +22,7 @@ export function SiteHeader() {
           className={`main-nav${open ? " nav-open" : ""}`}
           aria-label="Main navigation"
         >
-          <a href="/asphalt-calculator" onClick={() => setOpen(false)}>
+          <a href="/#calculator" onClick={() => setOpen(false)}>
             Calculator
           </a>
           <a href="/guides/measure-driveway" onClick={() => setOpen(false)}>
@@ -33,7 +33,7 @@ export function SiteHeader() {
           </a>
           <a
             className="nav-action"
-            href="/asphalt-calculator"
+            href="/#calculator"
             onClick={() => setOpen(false)}
           >
             Plan your project <ArrowUpRight size={15} />
@@ -58,7 +58,7 @@ export function SiteFooter() {
         </div>
         <div>
           <h2>THE WORKBENCH</h2>
-          <a href="/asphalt-calculator">Asphalt calculator</a>
+          <a href="/#calculator">Asphalt calculator</a>
           <a href="/guides/asphalt-coverage">Coverage per ton</a>
           <a href="/guides/asphalt-density">Density &amp; units</a>
         </div>

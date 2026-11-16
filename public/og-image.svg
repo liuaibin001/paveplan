@@ -1,1 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#f4f2eb"/><path d="M780 0h420v630H780Z" fill="#242c2b"/><path d="m805 620 125-610m65 610 125-610" stroke="#ebc447" stroke-width="8"/><path d="m902 630 9-46m10-48 9-46m10-48 9-46m10-48 9-46m10-48 9-46m10-48 9-46m10-48 9-46" stroke="#f4f2eb" stroke-width="8"/><text x="70" y="95" font-family="sans-serif" font-size="32" font-weight="700" fill="#242c2b">PavePlan.</text><text x="70" y="250" font-family="sans-serif" font-size="64" font-weight="700" fill="#242c2b">Plan the paving.</text><text x="70" y="330" font-family="sans-serif" font-size="64" font-weight="700" fill="#68715f">Know the tons.</text><rect x="70" y="390" width="615" height="2" fill="#d1d6c6"/><text x="70" y="440" font-family="monospace" font-size="20" fill="#4b5945">ASPHALT MATERIAL CALCULATOR</text><text x="70" y="480" font-family="sans-serif" font-size="20" fill="#68715f">US tons · Metric tonnes · Clear assumptions</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#ffffff"/>
+<rect x="60" y="40" width="32" height="32" rx="8" fill="#edc549"/>
+<path d="M70 63 L74 48" fill="none" stroke="#191b1e" stroke-width="2"/>
+<path d="M82 63 L78 48" fill="none" stroke="#191b1e" stroke-width="2"/>
+<path d="M76 61 L76 57" fill="none" stroke="#191b1e" stroke-width="1"/>
+<path d="M76 53 L76 50" fill="none" stroke="#191b1e" stroke-width="1"/>
+<text x="104" y="66" font-family="Segoe UI, sans-serif" font-size="29" font-weight="700" fill="#191b1e">PavePlan</text>
+<text x="1140" y="62" font-family="Segoe UI, sans-serif" font-size="15" font-weight="400" fill="#696e75" text-anchor="end">MATERIAL PLANNING / US + METRIC</text>
+<path d="M60 99 L1140 99" fill="none" stroke="#e1e3e6" stroke-width="1"/>
+<text x="60" y="191" font-family="Segoe UI, sans-serif" font-size="65" font-weight="700" fill="#191b1e">Asphalt calculator</text>
+<text x="63" y="239" font-family="Segoe UI, sans-serif" font-size="25" font-weight="400" fill="#696e75">Example: 100 ft x 20 ft x 3 in at 145 lb/ft3</text>
+<rect x="60" y="278" width="1080" height="292" rx="16" fill="white" stroke="#e1e3e6" stroke-width="1"/>
+<rect x="686" y="279" width="453" height="290" rx="15" fill="#fafafa"/>
+<rect x="686" y="279" width="15" height="290" rx="0" fill="#fafafa"/>
+<path d="M686 279 L686 569" fill="none" stroke="#e1e3e6" stroke-width="1"/>
+<text x="92" y="322" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#696e75">EXAMPLE INPUTS</text>
+<text x="92" y="361" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#696e75">LENGTH</text>
+<rect x="92" y="377" width="155" height="65" rx="8" fill="#fafafa" stroke="#e1e3e6" stroke-width="1"/>
+<text x="109" y="420" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#191b1e">100</text>
+<text x="229" y="418" font-family="Segoe UI, sans-serif" font-size="18" font-weight="400" fill="#696e75" text-anchor="end">ft</text>
+<text x="281" y="361" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#696e75">WIDTH</text>
+<rect x="281" y="377" width="155" height="65" rx="8" fill="#fafafa" stroke="#e1e3e6" stroke-width="1"/>
+<text x="298" y="420" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#191b1e">20</text>
+<text x="418" y="418" font-family="Segoe UI, sans-serif" font-size="18" font-weight="400" fill="#696e75" text-anchor="end">ft</text>
+<text x="470" y="361" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#696e75">COMPACTED DEPTH</text>
+<rect x="470" y="377" width="155" height="65" rx="8" fill="#fafafa" stroke="#e1e3e6" stroke-width="1"/>
+<text x="487" y="420" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700" fill="#191b1e">3</text>
+<text x="607" y="418" font-family="Segoe UI, sans-serif" font-size="18" font-weight="400" fill="#696e75" text-anchor="end">in</text>
+<path d="M92 472 L654 472" fill="none" stroke="#e1e3e6" stroke-width="1"/>
+<text x="92" y="510" font-family="Segoe UI, sans-serif" font-size="19" font-weight="400" fill="#696e75">Assumed density</text>
+<text x="654" y="510" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700" fill="#191b1e" text-anchor="end">145 lb/ft3</text>
+<text x="92" y="545" font-family="Segoe UI, sans-serif" font-size="15" font-weight="400" fill="#696e75">Compacted material; density is an example assumption.</text>
+<text x="718" y="322" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#696e75">NET MATERIAL ESTIMATE</text>
+<text x="714" y="422" font-family="Segoe UI, sans-serif" font-size="88" font-weight="700" fill="#191b1e">36.25</text>
+<text x="720" y="465" font-family="Segoe UI, sans-serif" font-size="27" font-weight="400" fill="#191b1e">US short tons</text>
+<rect x="720" y="493" width="10" height="10" rx="3" fill="#edc549"/>
+<text x="741" y="505" font-family="Segoe UI, sans-serif" font-size="14" font-weight="700" fill="#696e75">NO EXTRA ALLOWANCE</text>
+<text x="720" y="543" font-family="Segoe UI, sans-serif" font-size="18" font-weight="400" fill="#696e75">1 US short ton = 2,000 lb</text>
+<text x="60" y="608" font-family="Segoe UI, sans-serif" font-size="17" font-weight="400" fill="#696e75">Illustrative quantity. Confirm the material and assumptions for your project.</text>
+</svg>

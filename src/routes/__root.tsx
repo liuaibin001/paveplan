@@ -13,7 +13,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#f4f2eb" },
+      { name: "theme-color", content: "#ffffff" },
     ],
     links: [
       { rel: "stylesheet", href: styles },
@@ -29,7 +29,7 @@ export const Route = createRootRoute({
         The page could not be found. Head back to the workbench and start with
         your measurements.
       </p>
-      <a className="button-link" href="/asphalt-calculator">
+      <a className="button-link" href="/#calculator">
         Open asphalt calculator
       </a>
     </main>
@@ -41,7 +41,7 @@ export const Route = createRootRoute({
       <p>
         Please refresh and try again. Your browser draft is kept on this device.
       </p>
-      <a className="button-link" href="/asphalt-calculator">
+      <a className="button-link" href="/#calculator">
         Return to the calculator
       </a>
     </main>

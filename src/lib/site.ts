@@ -39,6 +39,14 @@ export function structuredData(value: unknown) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
+export function calculatorPageHead() {
+  return pageHead(
+    "Asphalt Calculator — Tons, Coverage & Material Cost",
+    "Calculate asphalt US tons or metric tonnes from area, compacted thickness and density. Combine multiple areas, add optional allowance and estimate material cost.",
+    "/",
+  );
+}
+
 export function breadcrumbData(items: { name: string; path: string }[]) {
   return {
     "@context": "https://schema.org",

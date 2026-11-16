@@ -73,7 +73,7 @@ function SharedProjectPage() {
           The public record has been removed. Any copies already downloaded by
           others cannot be removed.
         </p>
-        <a href="/asphalt-calculator" className="button-link">
+        <a href="/#calculator" className="button-link">
           Create another estimate
         </a>
       </main>
@@ -104,7 +104,7 @@ function SharedProjectPage() {
         </section>
       )}
       <p className="shared-heading">
-        <a href="/asphalt-calculator" className="button-link">
+        <a href="/#calculator" className="button-link">
           Make your own estimate
         </a>
       </p>

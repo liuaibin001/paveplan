@@ -10,6 +10,7 @@ import {
   Link2,
   Check,
   Info,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -39,10 +40,13 @@ const money = (n: number) =>
 export function Calculator({
   initialProject,
   readOnly = false,
+  variant = "default",
 }: {
   initialProject?: ProjectInput;
   readOnly?: boolean;
+  variant?: "default" | "hero";
 }) {
+  const hero = variant === "hero";
   const [input, setInput] = useState<ProjectInput>(
     initialProject ?? cloneDefault,
   );
@@ -274,13 +278,25 @@ export function Calculator({
       </span>
     </label>
   );
+  const thicknessField = (area: AreaInput) =>
+    field(
+      "Compacted thickness",
+      area.thickness,
+      imperial ? "in" : "mm",
+      (v) => updateArea(area.id, { thickness: v }),
+      { focus: "thickness" },
+    );
 
   return (
-    <div className={`workbench${readOnly ? " shared-workbench" : ""}`}>
+    <div
+      className={`workbench${hero ? " hero-workbench" : ""}${readOnly ? " shared-workbench" : ""}`}
+    >
       {!readOnly && (
         <form className="calculator-inputs" onSubmit={calculate} noValidate>
           <div className="panel-heading">
-            <span className="eyebrow">01 / YOUR MEASUREMENTS</span>
+            <span className="eyebrow">
+              {hero ? "Project measurements" : "01 / YOUR MEASUREMENTS"}
+            </span>
             <Button variant="ghost" size="sm" type="button" onClick={reset}>
               <RotateCcw size={13} />
               Reset
@@ -342,7 +358,9 @@ export function Calculator({
                   <TabsTrigger value="area">Known area</TabsTrigger>
                 </TabsList>
                 <TabsContent value="dimensions">
-                  <div className="field-grid">
+                  <div
+                    className={`field-grid${hero ? " measurement-grid" : ""}`}
+                  >
                     {field(
                       "Length",
                       area.length,
@@ -357,24 +375,24 @@ export function Calculator({
                       (v) => updateArea(area.id, { width: v }),
                       { focus: "width" },
                     )}
+                    {hero && thicknessField(area)}
                   </div>
                 </TabsContent>
                 <TabsContent value="area">
-                  {field(
-                    "Total area",
-                    area.area,
-                    imperial ? "ft²" : "m²",
-                    (v) => updateArea(area.id, { area: v }),
-                  )}
+                  <div
+                    className={hero ? "field-grid known-area-grid" : undefined}
+                  >
+                    {field(
+                      "Total area",
+                      area.area,
+                      imperial ? "ft²" : "m²",
+                      (v) => updateArea(area.id, { area: v }),
+                    )}
+                    {hero && thicknessField(area)}
+                  </div>
                 </TabsContent>
               </Tabs>
-              {field(
-                "Compacted thickness",
-                area.thickness,
-                imperial ? "in" : "mm",
-                (v) => updateArea(area.id, { thickness: v }),
-                { focus: "thickness" },
-              )}
+              {!hero && thicknessField(area)}
             </fieldset>
           ))}
           <Button
@@ -392,84 +410,99 @@ export function Calculator({
             Add another area{" "}
             <span className="muted">{input.areas.length}/20</span>
           </Button>
-          <div className="assumptions-block">
-            <div className="panel-heading">
-              <span className="eyebrow">02 / MATERIAL ASSUMPTIONS</span>
-              <a
-                href="/guides/asphalt-density"
-                aria-label="Read about asphalt density"
-              >
-                <Info size={16} />
-              </a>
-            </div>
-            <div className="field-grid">
-              {field(
-                "Mix density",
-                input.density,
-                imperial ? "lb/ft³" : "kg/m³",
-                (v) => update({ ...input, density: v }),
-              )}
-              {field(
-                "Extra allowance",
-                input.allowance,
-                "%",
-                (v) => update({ ...input, allowance: v }),
-                { zero: true },
-              )}
-            </div>
-            <p className="field-help">
-              145 lb/ft³ is a starting estimate. Use your supplier's mix
-              density. Allowance is optional and added once.
-            </p>
-            <label className="field-label">
-              Result weight unit
-              <select
-                value={input.outputUnit}
-                onChange={(e) => {
-                  try {
-                    update(
-                      convertOutputUnit(
-                        input,
-                        e.target.value as ProjectInput["outputUnit"],
-                      ),
-                    );
-                  } catch (e) {
-                    setError((e as Error).message);
-                  }
-                }}
-              >
-                <option value="us-ton">US short tons (2,000 lb)</option>
-                <option value="metric-tonne">Metric tonnes (1,000 kg)</option>
-              </select>
-            </label>
-            <label className="field-label price-field">
-              Material price <span className="optional-label">optional</span>
-              <span className="number-field">
-                <span className="currency-prefix">$</span>
-                <input
-                  aria-label="Material price per selected ton unit"
-                  type="number"
-                  inputMode="decimal"
-                  min="0"
-                  step="any"
-                  value={
-                    input.price === null ? "" : Number(input.price.toFixed(4))
-                  }
-                  placeholder="Your supplier's quote"
-                  onChange={(e) =>
-                    update({
-                      ...input,
-                      price:
-                        e.target.value === "" ? null : e.target.valueAsNumber,
-                    })
-                  }
-                />
-                <span>
-                  /{input.outputUnit === "us-ton" ? "US ton" : "tonne"}
+          <details className="assumptions-disclosure" open={!hero}>
+            <summary>
+              <span>Density, allowance &amp; price</span>
+              <ChevronDown size={15} aria-hidden="true" />
+            </summary>
+            <div className="assumptions-block">
+              <div className="panel-heading">
+                <span className="eyebrow">02 / MATERIAL ASSUMPTIONS</span>
+                <a
+                  href="/guides/asphalt-density"
+                  aria-label="Read about asphalt density"
+                >
+                  <Info size={16} />
+                </a>
+              </div>
+              <div className="field-grid">
+                {field(
+                  "Mix density",
+                  input.density,
+                  imperial ? "lb/ft³" : "kg/m³",
+                  (v) => update({ ...input, density: v }),
+                )}
+                {field(
+                  "Extra allowance",
+                  input.allowance,
+                  "%",
+                  (v) => update({ ...input, allowance: v }),
+                  { zero: true },
+                )}
+              </div>
+              <p className="field-help">
+                145 lb/ft³ is a starting estimate. Use your supplier's mix
+                density. Allowance is optional and added once.
+              </p>
+              <label className="field-label">
+                Result weight unit
+                <select
+                  value={input.outputUnit}
+                  onChange={(e) => {
+                    try {
+                      update(
+                        convertOutputUnit(
+                          input,
+                          e.target.value as ProjectInput["outputUnit"],
+                        ),
+                      );
+                    } catch (e) {
+                      setError((e as Error).message);
+                    }
+                  }}
+                >
+                  <option value="us-ton">US short tons (2,000 lb)</option>
+                  <option value="metric-tonne">Metric tonnes (1,000 kg)</option>
+                </select>
+              </label>
+              <label className="field-label price-field">
+                Material price <span className="optional-label">optional</span>
+                <span className="number-field">
+                  <span className="currency-prefix">$</span>
+                  <input
+                    aria-label="Material price per selected ton unit"
+                    type="number"
+                    inputMode="decimal"
+                    min="0"
+                    step="any"
+                    value={
+                      input.price === null ? "" : Number(input.price.toFixed(4))
+                    }
+                    placeholder="Your supplier's quote"
+                    onChange={(e) =>
+                      update({
+                        ...input,
+                        price:
+                          e.target.value === "" ? null : e.target.valueAsNumber,
+                      })
+                    }
+                  />
+                  <span>
+                    /{input.outputUnit === "us-ton" ? "US ton" : "tonne"}
+                  </span>
                 </span>
-              </span>
-            </label>
-          </div>
+              </label>
+            </div>
+          </details>
+          {hero && (
+            <p className="assumptions-summary">
+              {formatNumber(input.density)} {imperial ? "lb/ft³" : "kg/m³"}
+              {" · "}
+              {formatNumber(input.allowance)}% extra
+              {input.price !== null &&
+                ` · ${money(input.price)}/${input.outputUnit === "us-ton" ? "US ton" : "tonne"}`}
+            </p>
+          )}
           {error && (
             <p role="alert" className="form-error">
               {error}
@@ -491,7 +524,11 @@ export function Calculator({
       >
         <div className="estimate-panel-top">
           <span className="eyebrow">
-            {readOnly ? "SHARED PROJECT" : "03 / YOUR ESTIMATE"}
+            {readOnly
+              ? "SHARED PROJECT"
+              : hero
+                ? "Material estimate"
+                : "03 / YOUR ESTIMATE"}
           </span>
           <span
             className={`result-status${snapshot && !stale ? " status-ready" : ""}`}
@@ -503,7 +540,7 @@ export function Calculator({
                 : "READY WHEN YOU ARE"}
           </span>
         </div>
-        <RoadDiagram active={active} compact />
+        {!hero && <RoadDiagram active={active} compact />}
         {snapshot ? (
           <>
             {stale && (
@@ -638,22 +675,55 @@ export function Calculator({
         ) : (
           <div className="empty-result">
             <p className="result-label">
-              A SOLID PLAN STARTS WITH THE NUMBERS.
+              {hero
+                ? "PLANNED MATERIAL TOTAL"
+                : "A SOLID PLAN STARTS WITH THE NUMBERS."}
             </p>
-            <h2>
-              Your project.
-              <br />
-              Measured clearly.
-            </h2>
+            {hero ? (
+              <>
+                <div className="result-placeholder" aria-hidden="true">
+                  -- <span>{weightUnit}</span>
+                </div>
+                <h2>Your material estimate</h2>
+              </>
+            ) : (
+              <h2>
+                Your project.
+                <br />
+                Measured clearly.
+              </h2>
+            )}
             <p>
-              Enter your dimensions, choose a density, and calculate your
-              asphalt material in tons.
+              {hero
+                ? "Check your measurements and select Calculate material to see the quantity, volume and optional cost."
+                : "Enter your dimensions, choose a density, and calculate your asphalt material in tons."}
             </p>
-            <div className="empty-example">
-              <span>LOADED EXAMPLE</span>
-              <strong>100 ft × 20 ft × 3 in</strong>
-              <span>145 lb/ft³ · zero extra allowance</span>
-            </div>
+            {hero ? (
+              <dl className="empty-metrics">
+                <div>
+                  <dt>Surface area</dt>
+                  <dd>
+                    -- <span>{imperial ? "ft²" : "m²"}</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Volume</dt>
+                  <dd>
+                    -- <span>{imperial ? "yd³" : "m³"}</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Material cost</dt>
+                  <dd>--</dd>
+                </div>
+              </dl>
+            ) : (
+              <div className="empty-example">
+                <span>LOADED EXAMPLE</span>
+                <strong>100 ft × 20 ft × 3 in</strong>
+                <span>145 lb/ft³ · zero extra allowance</span>
+              </div>
+            )}
           </div>
         )}
         {share && (
