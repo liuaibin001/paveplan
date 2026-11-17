@@ -23,16 +23,20 @@ function HomePage() {
             <div>
               <p className="tool-kicker">
                 <span />
-                THE MATERIAL WORKBENCH
+                PAVEPLAN / MATERIAL TOOLS
               </p>
               <h1 id="home-heading">Asphalt calculator</h1>
-              <p className="tool-intro">
-                Your measurements. A clear material estimate.
-              </p>
             </div>
-            <a className="method-link" href="/methodology">
-              How we calculate <ArrowUpRight size={15} />
-            </a>
+            <div className="hero-heading-note">
+              <p className="tool-intro">
+                Estimate asphalt tons, coverage and material cost.
+                <br />
+                Enter your measurements to get started.
+              </p>
+              <a className="method-link" href="/methodology">
+                Formula &amp; assumptions <ArrowUpRight size={15} />
+              </a>
+            </div>
           </div>
           <Calculator variant="hero" />
           <ul className="tool-benefits" aria-label="Calculator features">

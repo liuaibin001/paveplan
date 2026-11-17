@@ -148,7 +148,7 @@ section[id] {
 }
 .site-header-inner {
   height: 68px;
-  width: min(1280px, calc(100% - 80px));
+  width: min(1180px, calc(100% - 80px));
   margin: auto;
   display: flex;
   align-items: center;
