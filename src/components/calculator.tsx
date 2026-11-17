@@ -29,7 +29,6 @@ import {
   type ProjectResult,
 } from "@/lib/calculator";
 import { METHOD_VERSION } from "@/lib/site";
-import "./calculator-hero.css";
 
 const DRAFT_KEY = "paveplan:draft:v1";
 type Snapshot = { input: ProjectInput; result: ProjectResult };
@@ -323,9 +322,14 @@ export function Calculator({
           noValidate
         >
           <div className="input-toolbar">
-            <h2 className="panel-title" id={`${instanceId}-measurements`}>
-              Project measurements
-            </h2>
+            <div>
+              <h2 className="panel-title" id={`${instanceId}-measurements`}>
+                Project measurements
+              </h2>
+              <p className="panel-description">
+                Enter the finished, compacted dimensions.
+              </p>
+            </div>
             <div className="unit-row">
               <span className="field-caption">Input units</span>
               <Tabs
@@ -644,75 +648,57 @@ export function Calculator({
           </>
         ) : (
           <div className="empty-result">
-            <div className="estimate-total">
-              <p className="result-label">Planned material total</p>
-              {hero ? (
-                <>
-                  <div className="result-placeholder" aria-hidden="true">
-                    -- <span>{weightUnit}</span>
-                  </div>
-                  <p className="ton-definition">
-                    {input.outputUnit === "us-ton"
-                      ? "1 US short ton = 2,000 lb"
-                      : "1 metric tonne = 1,000 kg"}
-                  </p>
-                </>
-              ) : (
-                <h3>
-                  Your project.
-                  <br />
-                  Measured clearly.
-                </h3>
-              )}
-            </div>
-            {hero ? (
-              <EstimateMetrics project={input} />
-            ) : (
+            {hero && <RoadDiagram active={active} compact />}
+            <h3>Your next project, measured.</h3>
+            <p className="empty-result-hint">
+              Enter your dimensions and calculate to see the total asphalt,
+              quantity breakdown and optional material cost.
+            </p>
+            {!hero && (
               <div className="empty-example">
                 <span>LOADED EXAMPLE</span>
                 <strong>100 ft × 20 ft × 3 in</strong>
                 <span>145 lb/ft³ · zero extra allowance</span>
               </div>
             )}
-            <p className="empty-result-hint">
-              Enter your measurements, then select Calculate material.
-            </p>
           </div>
         )}
-        <div className="estimate-actions">
-          <Button
-            disabled={!snapshot || stale}
-            variant="outline"
-            onClick={copy}
-          >
-            <Copy size={15} /> Copy
-          </Button>
-          <Button
-            disabled={!snapshot || stale}
-            variant="outline"
-            onClick={download}
-          >
-            <Download size={15} /> Download
-          </Button>
-          <Button
-            disabled={!snapshot || stale}
-            variant="outline"
-            onClick={() => window.print()}
-          >
-            <Printer size={15} /> Print
-          </Button>
-          {!readOnly && (
+        {snapshot && (
+          <div className="estimate-actions">
             <Button
-              disabled={
-                !snapshot || stale || busy || (!!share && !share.stored)
-              }
+              disabled={!snapshot || stale}
               variant="outline"
-              onClick={createShare}
+              onClick={copy}
             >
-              <Link2 size={15} /> {busy ? "Creating…" : "Share"}
+              <Copy size={15} /> Copy
             </Button>
-          )}
-        </div>
+            <Button
+              disabled={!snapshot || stale}
+              variant="outline"
+              onClick={download}
+            >
+              <Download size={15} /> Download
+            </Button>
+            <Button
+              disabled={!snapshot || stale}
+              variant="outline"
+              onClick={() => window.print()}
+            >
+              <Printer size={15} /> Print
+            </Button>
+            {!readOnly && (
+              <Button
+                disabled={
+                  !snapshot || stale || busy || (!!share && !share.stored)
+                }
+                variant="outline"
+                onClick={createShare}
+              >
+                <Link2 size={15} /> {busy ? "Creating…" : "Share"}
+              </Button>
+            )}
+          </div>
+        )}
         {snapshot && (
           <>
             <details className="estimate-details">

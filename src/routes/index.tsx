@@ -21,20 +21,16 @@ function HomePage() {
         <div className="content-width">
           <div className="tool-hero-heading">
             <div>
-              <p className="tool-kicker">
-                <span />
-                PAVEPLAN / MATERIAL TOOLS
-              </p>
+              <p className="tool-kicker">A clearer plan, from the ground up</p>
               <h1 id="home-heading">Asphalt calculator</h1>
+              <p className="tool-intro">
+                Turn your measurements into asphalt tons and material cost.
+                Start with the example, or enter your own project.
+              </p>
             </div>
             <div className="hero-heading-note">
-              <p className="tool-intro">
-                Estimate asphalt tons, coverage and material cost.
-                <br />
-                Enter your measurements to get started.
-              </p>
               <a className="method-link" href="/methodology">
-                Formula &amp; assumptions <ArrowUpRight size={15} />
+                See how it is calculated <ArrowUpRight size={15} />
               </a>
             </div>
           </div>
@@ -69,13 +65,10 @@ function HomePage() {
         <section className="field-guides" aria-labelledby="guides-heading">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">FIELD NOTES</p>
-              <h2 id="guides-heading">
-                Good estimates start with good inputs.
-              </h2>
+              <h2 id="guides-heading">Planning guides</h2>
             </div>
             <span className="section-caption">
-              A little context before you order.
+              Reference notes for your next estimate.
             </span>
           </div>
           <div className="guide-grid">

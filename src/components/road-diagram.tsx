@@ -66,7 +66,7 @@ export function RoadDiagram({
       </g>
       <g
         fontFamily="'IBM Plex Mono', monospace"
-        fontSize="12"
+        fontSize={compact ? "17" : "12"}
         letterSpacing="1"
       >
         <text
@@ -88,7 +88,13 @@ export function RoadDiagram({
         <text x="468" y="208" textAnchor="middle" fill={accent("thickness")}>
           DEPTH
         </text>
-        <text x="82" y="328" fontSize="10" opacity=".6" fill="currentColor">
+        <text
+          x="82"
+          y="328"
+          fontSize={compact ? "13" : "10"}
+          opacity=".8"
+          fill="currentColor"
+        >
           FINISHED / COMPACTED THICKNESS
         </text>
       </g>

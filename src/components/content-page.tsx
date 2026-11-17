@@ -26,6 +26,17 @@ export function ContentPageView({ page }: { page: ContentPage }) {
           <p className="article-intro">{page.intro}</p>
         </header>
 
+        <details className="article-mobile-toc">
+          <summary>On this page</summary>
+          <nav aria-label="Article sections">
+            {page.sections.map((section) => (
+              <a href={`#${section.id}`} key={section.id}>
+                {section.heading}
+              </a>
+            ))}
+          </nav>
+        </details>
+
         {page.sections.map((section) => (
           <section
             className="article-section"

@@ -1,8 +1,8 @@
-export function Brand({ inverse = false }: { inverse?: boolean }) {
+export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <a
       href="/"
-      className={`brand${inverse ? " brand-inverse" : ""}`}
+      className={`brand${compact ? " brand-compact" : ""}`}
       aria-label="PavePlan home"
     >
       <svg
@@ -25,7 +25,6 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
       </svg>
       <span>
         Pave<span className="brand-light">Plan</span>
-        <span className="brand-dot">.</span>
       </span>
     </a>
   );
